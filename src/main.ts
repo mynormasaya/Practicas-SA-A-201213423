@@ -1,0 +1,28 @@
+import { Product } from "./models/Product";
+import { InventoryService } from "./services/InventoryService";
+
+// Instancia del servicio de inventario
+const inventory = new InventoryService();
+
+// Agregar productos
+inventory.addProduct(new Product("Laptop", 5, 7500));
+inventory.addProduct(new Product("Mouse", 20, 150));
+inventory.addProduct(new Product("Teclado", 10, 350));
+
+// Listar productos
+inventory.listProducts();
+
+// Buscar un producto
+inventory.findProduct("Mouse");
+
+// Eliminar un producto
+inventory.removeProduct("Mouse");
+
+// Intentar eliminar un producto que no existe
+inventory.removeProduct("Monitor");
+
+// Mostrar productos ordenados por precio
+inventory.listSorted("price");
+
+// Mostrar productos ordenados por cantidad
+inventory.listSorted("quantity");
