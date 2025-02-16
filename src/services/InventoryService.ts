@@ -3,44 +3,36 @@ import { Product } from "../models/Product";
 export class InventoryService {
     private inventory: Product[] = [];
 
-    // Agregar producto al inventario
+    // Agrega un producto al inventario
     addProduct(product: Product): void {
         this.inventory.push(product);
-        console.log(`Producto agregado: ${product.toString()}`);
     }
 
-    // Eliminar producto por nombre
-    removeProduct(name: string): void {
-        const index = this.inventory.findIndex(prod => prod.name.toLowerCase() === name.toLowerCase());
-        if (index !== -1) {
-            const removed = this.inventory.splice(index, 1);
-            console.log(`Producto eliminado: ${removed[0].toString()}`);
-        } else {
-            console.log(`Producto '${name}' no encontrado.`);
-        }
-    }
-
-    // Mostrar lista de productos
-    listProducts(): void {
-        if (this.inventory.length === 0) {
-            console.log("El inventario está vacío.");
+    // Elimina un producto del inventario con validaciones
+    removeProduct(name: string, removeAll: boolean = false): void {
+        const product = this.inventory.find(prod => prod.name === name);
+        if (!product) {
+            console.log("Producto no encontrado.");
             return;
         }
-        console.log("Inventario:");
-        this.inventory.forEach(product => console.log(product.toString()));
-    }
-
-    // Buscar producto por nombre
-    findProduct(name: string): void {
-        const product = this.inventory.find(prod => prod.name.toLowerCase() === name.toLowerCase());
-        if (product) {
-            console.log(`Producto encontrado: ${product.toString()}`);
+        
+        if (product.quantity > 1 && !removeAll) {
+            product.quantity -= 1;
+            console.log(`Se eliminó una unidad de ${product.name}. Cantidad restante: ${product.quantity}`);
         } else {
-            console.log(`Producto '${name}' no encontrado.`);
+            this.inventory = this.inventory.filter(prod => prod.name !== name);
+            console.log(`Se eliminó completamente el producto: ${product.name}`);
         }
     }
 
-    // Mostrar productos ordenados por precio o cantidad
+    // Devuelve la lista de productos en el inventario
+    listProducts(): Product[] {
+        console.log("Inventario actual:");
+        this.inventory.forEach(product => console.log(product.toString()));
+        return this.inventory;
+    }
+
+    // Lista los productos ordenados por precio o cantidad
     listSorted(criteria: "price" | "quantity"): void {
         const sorted = [...this.inventory].sort((a, b) => 
             criteria === "price" ? a.price - b.price : a.quantity - b.quantity
