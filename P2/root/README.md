@@ -151,6 +151,7 @@ JWT (**JSON Web Token**) es un estándar de autenticación sin estado que permit
 
 A continuación se muestra el **flujo de autenticación** utilizando **JWT**:
 
+```mermaid
 sequenceDiagram
     participant Usuario
     participant Frontend
@@ -181,3 +182,4 @@ sequenceDiagram
         Frontend->>Usuario: Redirige al login
     end
 
+```
