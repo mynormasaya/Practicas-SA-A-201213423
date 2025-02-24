@@ -151,7 +151,6 @@ JWT (**JSON Web Token**) es un estándar de autenticación sin estado que permit
 
 A continuación se muestra el **flujo de autenticación** utilizando **JWT**:
 
-```mermaid
 sequenceDiagram
     participant Usuario
     participant Frontend
@@ -159,16 +158,26 @@ sequenceDiagram
     participant BaseDeDatos
 
     Usuario->>Frontend: Ingresa credenciales
-    Frontend->>Backend: Envía credenciales (/auth/login)
-    Backend->>BaseDeDatos: Verifica usuario y contraseña
+    Frontend->>Backend: Envía credenciales en JSON (/auth/login)
+    Backend->>BaseDeDatos: Verifica usuario y contraseña (datos encriptados con AES)
     BaseDeDatos-->>Backend: Devuelve usuario válido
     Backend->>Frontend: Genera JWT y lo envía en una cookie HTTPOnly
     Frontend->>Usuario: Muestra Dashboard
 
     Usuario->>Frontend: Intenta acceder a recurso protegido
-    Frontend->>Backend: Envia solicitud con JWT en cookies
-    Backend->>BaseDeDatos: Verifica token y devuelve datos
-    BaseDeDatos-->>Backend: Datos de usuario
-    Backend->>Frontend: Devuelve recurso protegido
-    Frontend->>Usuario: Muestra contenido
-```
+    Frontend->>Backend: Envía solicitud con JWT en cookies (/dashboard)
+    Backend->>Backend: Verifica si el JWT ha expirado
+    alt Token Válido
+        Backend->>BaseDeDatos: Obtiene datos del usuario
+        BaseDeDatos-->>Backend: Devuelve datos del usuario
+        Backend->>Frontend: Devuelve recurso protegido
+        Frontend->>Usuario: Muestra contenido
+    else Token Expirado dentro del tiempo de renovación
+        Backend->>Backend: Genera nuevo token y actualiza cookie HTTPOnly
+        Backend->>Frontend: Devuelve nuevo token y contenido
+        Frontend->>Usuario: Muestra contenido con nuevo token
+    else Token Expirado fuera del tiempo de renovación
+        Backend->>Frontend: Devuelve error 403 (Token expirado)
+        Frontend->>Usuario: Redirige al login
+    end
+
