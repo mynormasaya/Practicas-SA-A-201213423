@@ -1,0 +1,165 @@
+# Proyecto de Autenticación con TypeScript, Express y React
+
+Este proyecto implementa un sistema de autenticación con JWT, cookies HTTPOnly y encriptación AES. Incluye un backend en **Express con TypeScript** y un frontend en **React con TypeScript**.
+
+## 📌 Instrucciones para ejecutar el proyecto
+
+### **1. Clonar el repositorio**
+```sh
+git clone <repo_url>
+cd <repo_name>
+```
+
+### **2. Configurar el Backend**
+```sh
+cd backend
+npm install
+```
+
+**Crear un archivo `.env` en la carpeta `backend/` y agregar:**
+```env
+DB_HOST=localhost
+DB_USER=user
+DB_PASSWORD=userpassword
+DB_NAME=auth_db
+JWT_SECRET=supersecretkey
+JWT_EXPIRATION=1h
+JWT_RENEWAL_LIMIT=10m
+AES_SECRET_KEY=my_super_secret_key_32bytes_
+AES_IV=my_16bytes_iv_str_
+```
+
+### **3. Configurar la Base de Datos en Docker**
+Para levantar la base de datos MariaDB en un contenedor de Docker, usa el siguiente `docker-compose.yml`:
+
+```yaml
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: auth_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+volumes:
+  mariadb_data:
+    driver: local
+```
+
+Ejecutar el contenedor:
+```sh
+docker-compose up -d
+```
+
+Para acceder a la base de datos dentro del contenedor:
+```sh
+docker exec -it mariadb_container mysql -u root -p
+```
+(Ingresa la contraseña `rootpassword` cuando se te solicite.)
+
+### **4. Crear la estructura de la base de datos**
+Ejecuta los siguientes comandos dentro de la terminal de MariaDB:
+
+```sql
+USE auth_db;
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name TEXT NOT NULL, -- Se almacenará encriptado
+    email TEXT UNIQUE NOT NULL, -- Se almacenará encriptado
+    password TEXT NOT NULL, -- Hash con bcrypt
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+```
+
+### **5. Iniciar el servidor Backend**
+Ejecuta el siguiente comando para iniciar el backend:
+```sh
+npm run dev
+```
+
+### **6. Configurar el Frontend**
+```sh
+cd ../frontend
+npm install
+```
+Ejecutar el frontend:
+```sh
+npm run dev
+```
+
+### **7. Acceder a la Aplicación**
+- **Frontend:** `http://localhost:5173`
+
+---
+## 📌 Tecnologías y herramientas utilizadas
+
+### **Backend:**
+#### 🔹 Express.js con TypeScript
+- **Ventajas:**
+  - Rápido y eficiente para construir APIs.
+  - Soporte para middleware y modularidad.
+  - Compatible con TypeScript para mejor seguridad de tipos.
+- **Desventajas:**
+  - No es tan robusto como frameworks completos como NestJS.
+  - Requiere configuración manual para manejar errores y autenticación.
+
+#### 🔹 JWT (JSON Web Tokens) + Cookies HTTPOnly
+- **Ventajas:**
+  - Tokens auto-contenidos y seguros para autenticación sin estado.
+  - Cookies HTTPOnly protegen contra ataques XSS.
+- **Desventajas:**
+  - JWT puede ser comprometido si no se maneja correctamente.
+  - Requiere un mecanismo de renovación para mejorar la seguridad.
+
+#### 🔹 MariaDB con `mysql2`
+- **Ventajas:**
+  - Ligero y rápido, ideal para proyectos medianos y grandes.
+  - Compatible con MySQL, fácil de administrar.
+- **Desventajas:**
+  - No es tan flexible como bases de datos NoSQL como MongoDB.
+  - Puede requerir optimización para grandes volúmenes de datos.
+
+#### 🔹 Encriptación AES para datos sensibles
+- **Ventajas:**
+  - Proporciona seguridad para nombres y correos electrónicos.
+  - Mejora la protección de datos en la base de datos.
+- **Desventajas:**
+  - Aumenta la complejidad del sistema.
+  - Requiere claves seguras y bien gestionadas.
+
+---
+### **Frontend:**
+#### 🔹 React con TypeScript
+- **Ventajas:**
+  - Modularidad y reutilización de componentes.
+  - Soporte de TypeScript para seguridad en el desarrollo.
+- **Desventajas:**
+  - Curva de aprendizaje para principiantes.
+  - Puede requerir optimización en aplicaciones grandes.
+
+#### 🔹 Material UI
+- **Ventajas:**
+  - Ofrece un diseño limpio y accesible.
+  - Fácil de implementar en React.
+- **Desventajas:**
+  - Personalización avanzada puede ser compleja.
+  - Puede aumentar el tamaño de las librerias.
+
+#### 🔹 Axios para peticiones HTTP
+- **Ventajas:**
+  - Soporta `withCredentials` para manejo de cookies HTTPOnly.
+  - Más flexible y potente que `fetch()`.
+- **Desventajas:**
+  - Requiere configuración adicional para manejar errores globalmente.
+
+Este documento proporciona las instrucciones necesarias para configurar y ejecutar el proyecto de autenticación, así como una descripción general de las tecnologías utilizadas en su desarrollo. Si necesitas más ajustes, dime. 😃
