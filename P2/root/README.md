@@ -67,6 +67,28 @@ docker exec -it mariadb_container mysql -u root -p
 ```
 (Ingresa la contraseña `rootpassword` cuando se te solicite.)
 
+### **💡 Si el contenedor no tiene MySQL instalado**
+Algunos contenedores de **MariaDB** pueden no incluir el cliente **MySQL** por defecto. Para instalarlo dentro del contenedor, sigue estos pasos:
+
+1. **Accede al contenedor**
+   ```sh
+   docker exec -it mariadb_container sh
+   ```
+2. **Instala el cliente MySQL**
+   
+     ```sh
+     apt update && apt install -y mysql-client
+     ```
+3. **Verifica la instalación**
+   ```sh
+   mysql --version
+   ```
+4. **Sal del contenedor y accede nuevamente a MySQL**
+   ```sh
+   exit
+   docker exec -it mariadb_container mysql -u root -p
+   ```
+
 ### **4️⃣ Crear la estructura de la base de datos**
 Ejecuta los siguientes comandos dentro de **MariaDB**:
 ```sql
@@ -94,13 +116,10 @@ npm run dev
 ```
 
 ### **7️⃣ Acceder a la Aplicación**
-- 📌 **Backend:** `http://localhost:5000`
-- 📌 **Frontend:** `http://localhost:5173`
-- 📌 **Registro:** `http://localhost:5173/register`
-- 📌 **Login:** `http://localhost:5173/login`
-- 📌 **Dashboard:** `http://localhost:5173/dashboard`
 
----
+- 📌 **Frontend:** `http://localhost:5173`
+
+
 ## ⚙️ Tecnologías y herramientas utilizadas
 
 ### **🖥️ Backend**
