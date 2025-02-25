@@ -59,13 +59,8 @@ volumes:
 **Ejecutar el contenedor:**
 ```sh
 docker-compose up -d
-```
 
-**Acceder a la base de datos dentro del contenedor:**
-```sh
-docker exec -it mariadb_container mysql -u root -p
 ```
-(Ingresa la contraseña `rootpassword` cuando se te solicite.)
 
 ### **💡 Si el contenedor no tiene MySQL instalado**
 Algunos contenedores de **MariaDB** pueden no incluir el cliente **MySQL** por defecto. Para instalarlo dentro del contenedor, sigue estos pasos:
@@ -83,11 +78,20 @@ Algunos contenedores de **MariaDB** pueden no incluir el cliente **MySQL** por d
    ```sh
    mysql --version
    ```
-4. **Sal del contenedor y accede nuevamente a MySQL**
+
+   4. **Sal del contenedor y accede a MySQL**
    ```sh
    exit
-   docker exec -it mariadb_container mysql -u root -p
    ```
+
+**Acceder a la base de datos dentro del contenedor:**
+```sh
+docker exec -it mariadb_container mysql -u root -p
+```
+(Ingresa la contraseña `rootpassword` cuando se te solicite.)
+
+
+
 
 ### **4️⃣ Crear la estructura de la base de datos**
 Ejecuta los siguientes comandos dentro de **MariaDB**:
