@@ -79,8 +79,11 @@ El sistema se dividirá en los siguientes microservicios:
 
 ---
 ## 🏛️ 5. Diagrama ER de la Base de Datos
-![Diagrama ER](./diagrama_ER.png)
+Ver diagrama de ER !
 
 ---
 ## 🎯 6. Conclusión
 El diseño propuesto permite una migración eficiente del sistema monolítico a una arquitectura de microservicios, mejorando el rendimiento, escalabilidad y mantenibilidad del sistema de planillas. Se ha establecido una estrategia de comunicación robusta combinando APIs REST y mensajería asíncrona para mejorar la eficiencia del procesamiento de datos.  
+
+Ver PDF Dise;o de Arquitectura de Microservicios para sistema de planillas .pdf
+e imagenes adjuntas en el repositorio
