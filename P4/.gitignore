@@ -1,0 +1,42 @@
+# Node.js (Express, Fastify)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+dist/
+coverage/
+
+# Python (FastAPI)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+env/
+Pipfile.lock
+*.sqlite3
+instance/
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+docker-data/
+db-data/
+
+# Logs
+logs/
+*.log
+debug.log
+
+# VS Code
+.vscode/
+.history/
+*.swp
+
+# System files
+.DS_Store
+Thumbs.db

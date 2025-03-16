@@ -1,0 +1,102 @@
+services:
+  db:
+    image: postgres:15
+    container_name: gimnasio_db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: gimnasio
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - gimnasio_network
+
+  usuarios_service:
+    build: ./backend/usuarios
+    container_name: usuarios_service
+    restart: always
+    ports:
+      - "3001:3001"
+    environment:
+      - DB_HOST=gimnasio_db
+      - DB_USER=admin
+      - DB_PASSWORD=admin123
+      - DB_NAME=gimnasio
+      - PORT=3001
+      - JWT_SECRET=supersecreto
+    networks:
+      - gimnasio_network
+
+  pagos_service:
+    build: ./backend/pagos
+    container_name: pagos_service
+    restart: always
+    ports:
+      - "3002:3002"
+    environment:
+      - DB_HOST=gimnasio_db
+      - DB_USER=admin
+      - DB_PASSWORD=admin123
+      - DB_NAME=gimnasio
+      - PORT=3002
+      - JWT_SECRET=supersecreto
+    networks:
+      - gimnasio_network
+
+  reservas_service:
+    build: ./backend/reservas
+    container_name: reservas_service
+    restart: always
+    ports:
+      - "3003:3003"
+    environment:
+      - DB_HOST=gimnasio_db
+      - DB_USER=admin
+      - DB_PASSWORD=admin123
+      - DB_NAME=gimnasio
+      - PORT=3003
+      - JWT_SECRET=supersecreto
+    networks:
+      - gimnasio_network
+
+  inventario_service:
+    build: ./backend/inventario
+    container_name: inventario_service
+    restart: always
+    ports:
+      - "3004:3004"
+    environment:
+      - DB_HOST=gimnasio_db
+      - DB_USER=admin
+      - DB_PASSWORD=admin123
+      - DB_NAME=gimnasio
+      - PORT=3004
+      - JWT_SECRET=supersecreto
+    networks:
+      - gimnasio_network
+
+  gateway:
+    build: ./backend/gateway
+    container_name: api_gateway
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - USUARIOS_SERVICE=http://usuarios_service:3001
+      - PAGOS_SERVICE=http://pagos_service:3002
+      - RESERVAS_SERVICE=http://reservas_service:3003
+      - INVENTARIO_SERVICE=http://inventario_service:3004
+      - JWT_SECRET=supersecreto
+    networks:
+      - gimnasio_network
+
+volumes:
+  postgres_data:
+
+networks:
+  gimnasio_network:
+    driver: bridge
